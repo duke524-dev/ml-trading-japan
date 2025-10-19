@@ -1,0 +1,66 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# Data files (too large for GitHub)
+data/*.csv
+!data/sample_*.csv
+data/*.xlsx
+data/*.parquet
+
+# Logs
+logs/
+*.log
+
+# API keys & secrets
+*token*.py
+*secret*.py
+*password*.py
+.env
+*.key
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Reports (optional - may want to commit some)
+reports/*.csv
+!reports/*_summary.csv
+
+# Model files (too large)
+models/*.pkl
+models/*.joblib
+models/*.h5
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
