@@ -76,7 +76,13 @@ class FeatureEngineer:
         """Add basic price features."""
         # Price changes
         df['returns'] = df['close'].pct_change()
-        df['log_returns'] = np.log(df['close'] / df['close'].shift(1))
+        # Log returns with division by zero protection
+        shifted_close = df['close'].shift(1)
+        df['log_returns'] = np.where(
+            (shifted_close > 0) & (df['close'] > 0),
+            np.log(df['close'] / shifted_close),
+            0
+        )
         
         # Price ratios
         df['high_low_ratio'] = df['high'] / df['low']

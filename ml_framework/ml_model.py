@@ -101,10 +101,11 @@ class MLSignalPredictor:
             Training results dictionary
         """
         # Convert signals to 0, 1, 2 for XGBoost
-        y_train = y.copy()
-        y_train[y == -1] = 0  # Short
-        y_train[y == 0] = 1   # Neutral
-        y_train[y == 1] = 2   # Long
+        # Map: -1 (Short) -> 0, 0 (Neutral) -> 1, 1 (Long) -> 2
+        if isinstance(y, pd.Series):
+            y_train = y.map({-1: 0, 0: 1, 1: 2}).values
+        else:
+            y_train = np.where(y == -1, 0, np.where(y == 0, 1, 2))
         
         # Store feature columns
         if isinstance(X, pd.DataFrame):
@@ -192,7 +193,13 @@ class MLSignalPredictor:
             Array of probabilities shape (n_samples, 3)
         """
         if isinstance(X, pd.DataFrame):
-            X_pred = X[self.feature_cols].values if self.feature_cols else X.values
+            if self.feature_cols:
+                missing_cols = set(self.feature_cols) - set(X.columns)
+                if missing_cols:
+                    raise ValueError(f"Missing feature columns: {missing_cols}")
+                X_pred = X[self.feature_cols].values
+            else:
+                X_pred = X.values
         else:
             X_pred = X
         

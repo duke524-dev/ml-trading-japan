@@ -78,13 +78,25 @@ class Backtester:
         capital = self.initial_capital
         position = None
         
+        # Validate signals length
+        if len(signals) != len(df):
+            raise ValueError(
+                f"Signals length ({len(signals)}) must match DataFrame length ({len(df)})"
+            )
+        
         for i in range(len(df)):
             current_bar = df.iloc[i]
-            current_signal = signals[i]
+            current_signal = int(signals[i])  # Ensure integer type
             
             # Entry logic
             if position is None and current_signal != 0:
-                atr = current_bar[atr_column] if atr_column in df.columns else 50.0
+                # Get ATR value with proper error handling
+                try:
+                    atr = current_bar[atr_column]
+                    if pd.isna(atr) or atr <= 0:
+                        atr = 50.0
+                except (KeyError, IndexError):
+                    atr = 50.0
                 
                 position = {
                     'entry_idx': i,

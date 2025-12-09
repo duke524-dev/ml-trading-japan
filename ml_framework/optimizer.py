@@ -126,8 +126,10 @@ class WalkForwardOptimizer:
                 y_train = train_df['label'].values
                 
                 try:
-                    model.train(X_train, y_train)
-                except:
+                    model.train(X_train, y_train, verbose=False)
+                except (ValueError, KeyError, IndexError, AttributeError) as e:
+                    if verbose and param_idx % 50 == 0:
+                        print(f"⚠️  Training failed for fold {fold_idx}: {e}")
                     continue
                 
                 # Generate signals on test set
